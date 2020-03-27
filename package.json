@@ -1,21 +1,29 @@
 {
-  "name": "repo-template",
-  "private": true,
+  "name": "opentelemetry-plugin-orbitdb",
   "version": "1.0.0",
-  "description": "A template for creating new repositories in the @orbitdb organization",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc ts-mocha -p tsconfig.json 'test/**/*.test.ts'"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/RichardLitt/repo-template.git"
-  },
-  "keywords": ["orbitdb", "orbit", "template", "docs"],
-  "author": "Richard Littauer <richard.littauer@gmail.com> (https://burntfen.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/RichardLitt/repo-template/issues"
-  },
-  "homepage": "https://github.com/RichardLitt/repo-template#readme"
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@opentelemetry/context-async-hooks": "^0.5.1",
+    "@opentelemetry/core": "^0.5.1",
+    "@opentelemetry/node": "^0.5.1",
+    "@opentelemetry/plugin-http": "^0.5.1",
+    "@opentelemetry/plugin-https": "^0.5.1",
+    "@types/mocha": "^7.0.2",
+    "@types/orbit-db": "github:orbitdb/orbit-db-types",
+    "ipfs": "^0.39.1",
+    "ipfs-types": "^1.0.10",
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.0",
+    "orbit-db": "^0.23.1",
+    "shimmer": "^1.2.1",
+    "ts-mocha": "^7.0.0",
+    "ts-node": "^8.8.1",
+    "typescript": "^3.8.3"
+  }
 }
