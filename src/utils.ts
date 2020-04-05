@@ -22,30 +22,44 @@ export const getTracedCreateInstanceCommand = (
     original: Function
   ) => {
     return async function createInstance_trace(
+      this: OrbitDBTypes.OrbitDB,
       ipfs: IPFSTypes
     ) {
-        const span = tracer.startSpan(`${OrbitDBPlugin.COMPONENT}-createInstance`, {
-          kind: SpanKind.INTERNAL, // Can we petition to add PEER or P2P
-          attributes: {
-            [AttributeNames.IPFS_VERSION]: ipfs.version,
-            [AttributeNames.COMPONENT]: OrbitDBPlugin.COMPONENT,
-            [AttributeNames.DB_TYPE]: 'OrbitDB'
-          },
-        });
-         
-        // Span will close on disconnect
         try {
           const result = await original.apply(this, arguments);
-          span.setAttribute(AttributeNames.ORBIT_ID, result.id)
+
+          // attach global span to returned orbitdb object
+          let span: Span = tracer.startSpan(`${OrbitDBPlugin.COMPONENT}-${result.id}`, {
+            kind: SpanKind.INTERNAL,
+            attributes: {
+              [AttributeNames.IPFS_VERSION]: (await ipfs.version()),
+              [AttributeNames.COMPONENT]: OrbitDBPlugin.COMPONENT,
+              [AttributeNames.DB_TYPE]: 'OrbitDB',
+              [AttributeNames.ORBIT_ID]: result.id
+            },
+          });
+
+          // Span will close on disconnect
+          result.span = span;
           return result;
         } catch (rethrow) {
-          endSpan(span, rethrow);
-          throw rethrow; // rethrow after ending span
+          throw rethrow;
         }
       }
-  
-      // We don't know how to trace this call, so don't start/stop a span
-      return original.apply(this, arguments);
+  };
+
+  export const getTracedDisconnectCommand = (
+      tracer: Tracer,
+      original: Function
+    ) => {
+      return function disconnect_trace(this: OrbitDBTypes.OrbitDB) {
+        try {
+          endSpan(this.span)
+        } catch (rethrow) {
+          endSpan(this.span, rethrow)
+        }
+        return original.apply(this, arguments);
+      }
   };
 
   export const getTracedOnPeerConnectedCommand = (
@@ -53,9 +67,27 @@ export const getTracedCreateInstanceCommand = (
       original: Function
     ) => {
       return function _onPeerConnected_trace(
-        this: OrbitDBTypes.OrbitDB, // & RedisPluginClientTypes,
-        cmd?: RedisCommand
+        this: OrbitDBTypes.OrbitDB,
+        address: string,
+        peer: string
       ) {
-        return original.apply(this, arguments);
+        let span: Span = tracer.startSpan(`${OrbitDBPlugin.COMPONENT}-${peer}-#_onPeerConnected`, {
+          kind: SpanKind.INTERNAL,
+          attributes: {
+            [AttributeNames.COMPONENT]: OrbitDBPlugin.COMPONENT,
+            [AttributeNames.DB_TYPE]: 'OrbitDB',
+            [AttributeNames.ORBIT_ADDRESS]: address,
+            [AttributeNames.ORBIT_ID]: peer
+          },
+        });
+ 
+        try {
+          const result = original.apply(this, arguments);
+          endSpan(span)
+          return result;
+        } catch (rethrow) {
+          endSpan(span, rethrow)
+          return;
+        }
       }
   };

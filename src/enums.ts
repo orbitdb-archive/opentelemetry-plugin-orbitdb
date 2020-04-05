@@ -24,6 +24,7 @@ export enum AttributeNames {
     PEER_HOSTNAME = 'peer.host',
   
     ORBIT_ID = "orbitdb.id",
+    ORBIT_ADDRESS = "orbitdb.address",
     IPFS_VERSION = "ipfs.version",
 
     // optional

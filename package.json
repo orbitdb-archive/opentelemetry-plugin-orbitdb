@@ -2,9 +2,10 @@
   "name": "opentelemetry-plugin-orbitdb",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/index.ts",
   "scripts": {
-    "test": "nyc ts-mocha -p tsconfig.json 'test/**/*.test.ts'"
+    "test": "nyc ts-mocha -p tsconfig.json 'test/**/*.test.ts'",
+    "watch": "nodemon -x 'npm test'"
   },
   "author": "",
   "license": "ISC",
@@ -16,14 +17,19 @@
     "@opentelemetry/plugin-https": "^0.5.1",
     "@types/mocha": "^7.0.2",
     "@types/orbit-db": "github:orbitdb/orbit-db-types",
+    "@types/shimmer": "^1.0.1",
     "ipfs": "^0.39.1",
     "ipfs-types": "^1.0.10",
-    "mocha": "^7.1.1",
-    "nyc": "^15.0.0",
     "orbit-db": "^0.23.1",
     "shimmer": "^1.2.1",
-    "ts-mocha": "^7.0.0",
     "ts-node": "^8.8.1",
     "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.1",
+    "nodemon": "^2.0.2",
+    "nyc": "^15.0.0",
+    "orbit-db-test-utils": "^0.8.5",
+    "ts-mocha": "^7.0.0"
   }
 }

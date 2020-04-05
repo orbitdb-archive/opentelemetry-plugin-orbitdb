@@ -1,0 +1,23 @@
+{
+  "name": "orbitdb-opentelemetry-zipkin-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@opentelemetry/core": "^0.6.0",
+    "@opentelemetry/exporter-zipkin": "^0.6.0",
+    "@opentelemetry/metrics": "^0.6.0",
+    "@opentelemetry/node": "^0.6.0",
+    "@opentelemetry/plugin-http": "^0.6.0",
+    "@opentelemetry/tracing": "^0.6.0",
+    "ipfs": "^0.39.1",
+    "opentelemetry-plugin-orbitdb": "../..",
+    "orbit-db": "^0.23.1"
+  }
+}
